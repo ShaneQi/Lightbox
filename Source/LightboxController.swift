@@ -1,6 +1,11 @@
 import UIKit
 import Hue
 
+public protocol LightboxControllerDeletionDelegate: class {
+
+	func lightboxController(_ controller: LightboxController, didDeletePage page: Int)
+}
+
 public protocol LightboxControllerPageDelegate: class {
 
   func lightboxController(_ controller: LightboxController, didMoveToPage page: Int)
@@ -143,6 +148,7 @@ open class LightboxController: UIViewController {
   open weak var pageDelegate: LightboxControllerPageDelegate?
   open weak var dismissalDelegate: LightboxControllerDismissalDelegate?
   open weak var imageTouchDelegate: LightboxControllerTouchDelegate?
+  open weak var deletionDelegate: LightboxControllerDeletionDelegate?
   open internal(set) var presented = false
   open fileprivate(set) var seen = false
 
@@ -386,6 +392,7 @@ extension LightboxController: HeaderViewDelegate {
     }
 
     let prevIndex = currentPage
+    self.deletionDelegate?.lightboxController(self, didDeletePage: prevIndex)
 
     if currentPage == numberOfPages - 1 {
       previous()
